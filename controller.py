@@ -1,5 +1,18 @@
-class Controller():
-    def __init__(self, memory, instruction_counter, instruction_register, operation_code, operand, accumulator):
+import tkinter as tk
+from view import View
+from model import Memory
+
+
+class Controller:
+    def __init__(
+        self,
+        memory,
+        instruction_counter,
+        instruction_register,
+        operation_code,
+        operand,
+        accumulator,
+    ):
         self.memory = memory
         self.instruction_counter = instruction_counter
         self.instruction_register = instruction_register
@@ -7,6 +20,23 @@ class Controller():
         self.operand = operand
         self.accumulator = accumulator
 
+        m = Memory(self.memory)
+        m.clean_memory(self.memory)
+
+        window = tk.Tk()
+        window.title("UVsim")
+        window.geometry("1000x600")
+        v = View(
+            window,
+            self.memory,
+            self.instruction_counter,
+            self.instruction_register,
+            self.operation_code,
+            self.operand,
+            self.accumulator,
+        )
+
+        window.mainloop()
 
     def add(self, memory_location):
         """Adds a number from a specific location in memory to the number in the accumulator."""
@@ -16,7 +46,6 @@ class Controller():
             raise ValueError("Your accumulator number exceeds the range available.")
         return self.accumulator
 
-
     def subtract(self, memory_location):
         """Subtracts a number from a specific location in memory from the number in the accumulator."""
 
@@ -25,7 +54,6 @@ class Controller():
         if self.accumulator > 9999 or self.accumulator < -9999:
             raise ValueError("Your accumulator number exceeds the range available.")
         return self.accumulator
-
 
     def multiply(self, memory_location):
         """Multiplies a number from a specific memory location to the number in the accumulator
@@ -38,7 +66,6 @@ class Controller():
             raise ValueError("Your accumulator number exceeds the range available.")
         return
 
-
     def divide(self, memory_location):
         """Divides the number in the accumulator by a number from a specific location in memory
         and returns the accumulator."""
@@ -49,7 +76,6 @@ class Controller():
         if self.accumulator > 9999 or self.accumulator < -9999:
             raise ValueError("Your accumulator number exceeds the range available.")
         return
-
 
     def read(self, memory_location):
         """Asks the user for an integer and puts it into a specific location in memory"""
@@ -72,7 +98,6 @@ class Controller():
                 self.memory[memory_location] = userInput
                 return
 
-
     def write(self, memory_location):
         """Prints the contents of the given memory location to the screen"""
 
@@ -81,20 +106,17 @@ class Controller():
         )
         return
 
-
     def load(self, memory_location):
         """ Will take a memory location and load what ever is there into the accumulator  """
 
         self.accumulator = self.memory[memory_location]
         return
 
-
     def store(self, memory_location):
         """ Will take whatever is in the accumulator and will store it in the given location """
 
         self.memory[memory_location] = self.accumulator
         return
-
 
     def branch_neg(self):
         """Will return True if the accumulator is less than zero, otherwise will return False"""
@@ -104,7 +126,6 @@ class Controller():
         else:
             return False
 
-
     def branch_zero(self):
         """Will return True if the accumulator is equal to zero, otherwise will return False"""
 
@@ -113,10 +134,9 @@ class Controller():
         else:
             return False
 
-
     def run_instructions(self):
         """Runs the program written into the memory"""
-        
+
         print("---- Running Program ----\n")
         index = 0
         while index < (len(self.memory) - 1):
@@ -188,7 +208,8 @@ class Controller():
 
             self.instruction_register = self.memory[index]
             self.operation_code = op
-            self.operand = memory_location 
+            self.operand = memory_location
         print("\n---- Program Finished ----")
+
     def __str__(self):
         pass

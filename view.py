@@ -1,4 +1,5 @@
 import tkinter as tk
+from model import Memory
 
 
 class View:
@@ -22,6 +23,12 @@ class View:
         self.operand = operand
         self.accumulator = accumulator
 
+        # Initialize Memory Class from model
+        self.M = Memory(self.memory)
+
+        self.createWindow()
+
+    def createWindow(self):
         # Begin creating widgets
         self.mainFrame.grid(sticky="news", pady=50, padx=50)
 
@@ -118,20 +125,31 @@ class View:
             if new_memory != "":
                 self.memory[i] = new_memory
 
-        # Creates new memory frame with new memory values
-        self.memory_frame.destroy()
-        self.memory_frame = tk.Frame(self.mainFrame)
-        memory_location = 0
-        self.retreive_mem_contents = []
-        for i in range(10):
-            for j in range(10):
-                mem_content = tk.Label(
-                    self.memory_frame, text=self.memory[memory_location]
-                )
-                mem_content.grid(row=i + 1, column=j, padx=5, pady=5)
-                self.retreive_mem_contents.append(mem_content)
-                memory_location += 1
-        self.memory_frame.grid(column=1, row=1)
+        # Checks if inputs are valid words in BASIC ml
+        if self.M.checkMemory(self.memory) == 1:
+
+            self.M.clean_memory(self.memory)
+
+            # Creates new memory frame with new memory values
+            self.memory_frame.destroy()
+            self.memory_frame = tk.Frame(self.mainFrame)
+            memory_location = 0
+            self.retreive_mem_contents = []
+            for i in range(10):
+                for j in range(10):
+                    mem_content = tk.Label(
+                        self.memory_frame, text=self.memory[memory_location]
+                    )
+                    mem_content.grid(row=i + 1, column=j, padx=5, pady=5)
+                    self.retreive_mem_contents.append(mem_content)
+                    memory_location += 1
+            self.memory_frame.grid(column=1, row=1)
+
+    def updateRegisters(self):
+        pass
+
+    def runProgram(self):
+        pass
 
     def printing(self):
         print("\nREGISTERS:")
