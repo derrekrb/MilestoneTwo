@@ -47,11 +47,11 @@ class View:
         # Create frame for input and initialize input boxes
         frame_input = tk.Frame(canvas)
         canvas.create_window((0, 0), window=frame_input, anchor="nw")
-        entry_list = []
+        self.entry_list = []
         for line in range(len(self.memory)):
             lineNum = tk.Label(frame_input, text=str(line).zfill(2) + "   ")
             lineEntry = tk.Entry(frame_input)
-            entry_list.append(lineEntry)
+            self.entry_list.append(lineEntry)
             lineNum.grid(column=1, row=line, sticky="news")
             lineEntry.grid(column=2, row=line, sticky="news")
         frame_input.update_idletasks()
@@ -60,20 +60,22 @@ class View:
 
         # Initialize memory frame
         self.memory_frame = tk.Frame(self.mainFrame)
-        self.load_memory_btn = tk.Button(self.memory_frame, text="Load Memory")
+
         # Load memory into frame
         memory_location = 0
-        retreive_mem_contents = []
+        self.retreive_mem_contents = []
         for i in range(10):
             for j in range(10):
                 mem_content = tk.Label(
                     self.memory_frame, text=self.memory[memory_location]
                 )
                 mem_content.grid(row=i + 1, column=j, padx=5, pady=5)
-                retreive_mem_contents.append(mem_content)
+                self.retreive_mem_contents.append(mem_content)
                 memory_location += 1
-        self.load_memory_btn.grid(row=0, columnspan="10", pady=10)
         self.memory_frame.grid(column=1, row=1)
+
+        self.load_memory_btn = tk.Button(self.mainFrame, text="Load Memory")
+        self.load_memory_btn.grid(row=2, columnspan=1, pady=10)
 
         # Initialize all Register Frames
         register_frame = tk.Frame(self.mainFrame)
@@ -105,8 +107,31 @@ class View:
 
         register_frame.grid(row=1, column=2, padx=10, pady=10)
 
+        # Update memory when load Memory button is pressed
+        self.load_memory_btn.bind("<Button-1>", self.loadMemory)
+
     def loadMemory(self, event):
-        tk.Label(self.mainFrame)
+        """When load memory button is pressed, the memory is updated with new values in the entry and loaded into the memory frame"""
+
+        for i in range(100):
+            new_memory = self.entry_list[i].get()
+            if new_memory != "":
+                self.memory[i] = new_memory
+
+        # Creates new memory frame with new memory values
+        self.memory_frame.destroy()
+        self.memory_frame = tk.Frame(self.mainFrame)
+        memory_location = 0
+        self.retreive_mem_contents = []
+        for i in range(10):
+            for j in range(10):
+                mem_content = tk.Label(
+                    self.memory_frame, text=self.memory[memory_location]
+                )
+                mem_content.grid(row=i + 1, column=j, padx=5, pady=5)
+                self.retreive_mem_contents.append(mem_content)
+                memory_location += 1
+        self.memory_frame.grid(column=1, row=1)
 
     def printing(self):
         print("\nREGISTERS:")
