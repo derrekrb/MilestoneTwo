@@ -1,5 +1,6 @@
 import tkinter as tk
 from model import Memory
+from controller import Controller
 
 
 class View:
@@ -22,7 +23,6 @@ class View:
         self.operation_code = operation_code
         self.operand = operand
         self.accumulator = accumulator
-
         # Initialize Memory Class from model
         self.M = Memory(self.memory)
 
@@ -84,6 +84,10 @@ class View:
         self.load_memory_btn = tk.Button(self.mainFrame, text="Load Memory")
         self.load_memory_btn.grid(row=2, columnspan=1, pady=10)
 
+        # Initialize Output Frame
+        output_frame = tk.Frame(self.mainFrame)
+        output_frame.grid(row=2, column=1)
+
         # Initialize all Register Frames
         register_frame = tk.Frame(self.mainFrame)
 
@@ -120,13 +124,16 @@ class View:
     def loadMemory(self, event):
         """When load memory button is pressed, the memory is updated with new values in the entry and loaded into the memory frame"""
 
-        for i in range(100):
-            new_memory = self.entry_list[i].get()
-            if new_memory != "":
-                self.memory[i] = new_memory
-
         # Checks if inputs are valid words in BASIC ml
-        if self.M.checkMemory(self.memory) == 1:
+        new_memory = ["+0000"] * 100
+        for i in range(100):
+            mem_input = self.entry_list[i].get()
+            if mem_input != "":
+                new_memory[i] = mem_input
+
+        if self.M.checkMemory(new_memory) == 1:
+
+            self.memory = new_memory
 
             self.M.clean_memory(self.memory)
 
@@ -145,10 +152,20 @@ class View:
                     memory_location += 1
             self.memory_frame.grid(column=1, row=1)
 
-    def updateRegisters(self):
-        pass
+    def runProgram(self, event):
 
-    def runProgram(self):
+        c = Controller(
+            self.memory,
+            self.instruction_counter,
+            self.instruction_register,
+            self.operation_code,
+            self.operand,
+            self.accumulator,
+        )
+
+        # Update registers with new values
+
+    def Output(self):
         pass
 
     def printing(self):

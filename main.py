@@ -1,5 +1,5 @@
-from controller import Controller
-
+from view import View
+import tkinter as tk
 
 """
 CS2450: Milestone 1
@@ -31,7 +31,11 @@ def main():
     #         memory[program_counter] = entry_command
     #         program_counter += 1
 
-    c = Controller(
+    window = tk.Tk()
+    window.title("UVsim")
+    window.geometry("1000x600")
+    v = View(
+        window,
         memory,
         instruction_counter,
         instruction_register,
@@ -39,7 +43,8 @@ def main():
         operand,
         accumulator,
     )
-    c.run_instructions()
+
+    window.mainloop()
 
 
 if __name__ == "__main__":
