@@ -1,5 +1,4 @@
 import tkinter as tk
-from view import View
 from model import Memory
 
 
@@ -22,21 +21,6 @@ class Controller:
 
         m = Memory(self.memory)
         m.clean_memory(self.memory)
-
-        window = tk.Tk()
-        window.title("UVsim")
-        window.geometry("1000x600")
-        v = View(
-            window,
-            self.memory,
-            self.instruction_counter,
-            self.instruction_register,
-            self.operation_code,
-            self.operand,
-            self.accumulator,
-        )
-
-        window.mainloop()
 
     def add(self, memory_location):
         """Adds a number from a specific location in memory to the number in the accumulator."""

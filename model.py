@@ -16,12 +16,14 @@ class Memory:
             if len(number) != 5:  # Checks if length of instruction is correct
                 self.popupmsg(f"{number} is not a valid word")
                 check = 0
+                return check
             elif number[0] not in (
                 "+",
                 "-",
             ):  # Checks if instruction contain a + or -
                 self.popupmsg(f"{number} is not a valid word")
                 check = 0
+                return check
             else:
                 check = 1
             index += 1
