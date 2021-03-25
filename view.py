@@ -81,12 +81,20 @@ class View:
                 memory_location += 1
         self.memory_frame.grid(column=1, row=1)
 
+        # Create the Load Memory Button
         self.load_memory_btn = tk.Button(self.mainFrame, text="Load Memory")
         self.load_memory_btn.grid(row=2, columnspan=1, pady=10)
 
+        # Create the Run Program Button
+        self.run_program_btn = tk.Button(self.mainFrame, text="Run Program")
+        self.run_program_btn.grid(row=3, columnspan=1, pady=5)
+
         # Initialize Output Frame
         output_frame = tk.Frame(self.mainFrame)
-        output_frame.grid(row=2, column=1)
+        tk.Label(output_frame, text="OUTPUT").grid(row=0, column=0)
+        self.prog_output = tk.Label(output_frame, text="")
+        self.prog_output.grid(row=1, column=0)
+        output_frame.grid(row=2, column=1, rowspan=2)
 
         # Initialize all Register Frames
         register_frame = tk.Frame(self.mainFrame)
@@ -121,6 +129,9 @@ class View:
         # Update memory when load Memory button is pressed
         self.load_memory_btn.bind("<Button-1>", self.loadMemory)
 
+        # Run the loaded Program when Run Program button is pressed
+        self.run_program_btn.bind("<Button-1>", self.runProgram)
+
     def loadMemory(self, event):
         """When load memory button is pressed, the memory is updated with new values in the entry and loaded into the memory frame"""
 
@@ -153,8 +164,9 @@ class View:
             self.memory_frame.grid(column=1, row=1)
 
     def runProgram(self, event):
+        """When the run program button is pressed, the memory is ran as the program"""
 
-        c = Controller(
+        C = Controller(
             self.memory,
             self.instruction_counter,
             self.instruction_register,
@@ -163,46 +175,59 @@ class View:
             self.accumulator,
         )
 
+        # Return an array of updated values from the Controller
+        C.run_instructions()
+        return_values = C.getOutputs()
+
         # Update registers with new values
+        self.memory = return_values[0]
+        self.instruction_counter = return_values[1]
+        self.instruction_register = return_values[2]
+        self.operation_code = return_values[3]
+        self.operand = return_values[4]
+        self.accumulator = return_values[5]
 
-    def Output(self):
-        pass
+        # Prints the output array to the output field
+        self.Output(return_values[6])
 
-    def printing(self):
-        print("\nREGISTERS:")
-        print("Accumulator:            " + str(self.accumulator))
-        print("Instruction Counter:    " + str(self.instruction_counter))
-        print("InstructionRegister:    " + self.instruction_register)
-        print("Operation Code:         " + str(self.operation_code).zfill(2))
-        print("Operand:                " + str(self.operand).zfill(2))
+    def Output(self, lyst):
+        self.prog_output.config(text=lyst)
 
-        print("Memory:")
-        print(
-            "       00     01     02     03     04     05     06     07     08     09"
-        )
-        tens = 0
-        i = 0
-        index = 0
+    # def printing(self):
+    #     print("\nREGISTERS:")
+    #     print("Accumulator:            " + str(self.accumulator))
+    #     print("Instruction Counter:    " + str(self.instruction_counter))
+    #     print("InstructionRegister:    " + self.instruction_register)
+    #     print("Operation Code:         " + str(self.operation_code).zfill(2))
+    #     print("Operand:                " + str(self.operand).zfill(2))
 
-        while i < len(self.memory):
-            if isinstance(self.memory[i], int):
-                if self.memory[i] >= 0:
-                    self.memory[i] = str(self.memory[i])
-                    self.memory[i] = "+" + self.memory[i].zfill(4)
-                    i += 1
-                else:
-                    self.memory[i] = str(self.memory[i])
-                    self.memory[i] = self.memory[i].zfill(5)
-                    i += 1
-            else:
-                i += 1
+    #     print("Memory:")
+    #     print(
+    #         "       00     01     02     03     04     05     06     07     08     09"
+    #     )
+    #     tens = 0
+    #     i = 0
+    #     index = 0
 
-        while index < len(self.memory):
-            print(
-                f"{str(tens).zfill(2)}  {self.memory[index]}  {self.memory[index+1]}  "
-                f"{self.memory[index+2]}  {self.memory[index+3]}  {self.memory[index+4]}  "
-                f"{self.memory[index+5]}  {self.memory[index+6]}  {self.memory[index+7]}  "
-                f"{self.memory[index+8]}  {self.memory[index+9]}"
-            )
-            index += 10
-            tens += 10
+    #     while i < len(self.memory):
+    #         if isinstance(self.memory[i], int):
+    #             if self.memory[i] >= 0:
+    #                 self.memory[i] = str(self.memory[i])
+    #                 self.memory[i] = "+" + self.memory[i].zfill(4)
+    #                 i += 1
+    #             else:
+    #                 self.memory[i] = str(self.memory[i])
+    #                 self.memory[i] = self.memory[i].zfill(5)
+    #                 i += 1
+    #         else:
+    #             i += 1
+
+    #     while index < len(self.memory):
+    #         print(
+    #             f"{str(tens).zfill(2)}  {self.memory[index]}  {self.memory[index+1]}  "
+    #             f"{self.memory[index+2]}  {self.memory[index+3]}  {self.memory[index+4]}  "
+    #             f"{self.memory[index+5]}  {self.memory[index+6]}  {self.memory[index+7]}  "
+    #             f"{self.memory[index+8]}  {self.memory[index+9]}"
+    #         )
+    #         index += 10
+    #         tens += 10

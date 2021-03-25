@@ -19,6 +19,8 @@ class Controller:
         self.operand = operand
         self.accumulator = accumulator
 
+        self.output = []
+
         m = Memory(self.memory)
         m.clean_memory(self.memory)
 
@@ -85,9 +87,11 @@ class Controller:
     def write(self, memory_location):
         """Prints the contents of the given memory location to the screen"""
 
-        print(
-            f"Contents of memory location {memory_location} is {self.memory[memory_location]}."
-        )
+        # print(
+        #     f"Contents of memory location {memory_location} is {self.memory[memory_location]}."
+        # )
+        self.output.append(self.memory[memory_location])
+
         return
 
     def load(self, memory_location):
@@ -121,7 +125,7 @@ class Controller:
     def run_instructions(self):
         """Runs the program written into the memory"""
 
-        print("---- Running Program ----\n")
+        # print("---- Running Program ----\n")
         index = 0
         while index < (len(self.memory) - 1):
             if self.memory[index] == "-99999":
@@ -193,7 +197,18 @@ class Controller:
             self.instruction_register = self.memory[index]
             self.operation_code = op
             self.operand = memory_location
-        print("\n---- Program Finished ----")
+        # print("\n---- Program Finished ----")
+
+    def getOutputs(self):
+        return_values = []
+        return_values.append(self.memory)
+        return_values.append(self.instruction_counter)
+        return_values.append(self.instruction_register)
+        return_values.append(self.operation_code)
+        return_values.append(self.operand)
+        return_values.append(self.accumulator)
+        return_values.append(self.output)
+        return return_values
 
     def __str__(self):
         pass
