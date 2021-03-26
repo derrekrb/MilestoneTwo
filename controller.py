@@ -1,5 +1,7 @@
 import tkinter as tk
+from tkinter import simpledialog
 from model import Memory
+from tkinter import messagebox
 
 
 class Controller:
@@ -26,70 +28,129 @@ class Controller:
 
     def add(self, memory_location):
         """Adds a number from a specific location in memory to the number in the accumulator."""
-        memory_value = self.memory[memory_location]
+        memory_value = int(self.memory[memory_location])
         self.accumulator += memory_value
+        self.accumulator = int(self.accumulator)
         if self.accumulator > 9999 or self.accumulator < -9999:
-            raise ValueError("Your accumulator number exceeds the range available.")
-        return self.accumulator
+            if self.accumulator > 9999:
+                messagebox.showinfo(
+                    "!",
+                    "Accumulator exceed max value of 9999. 9999 is loaded into the accumulator",
+                )
+                self.accumulator = 9999
+            else:
+                messagebox.showinfo(
+                    "!",
+                    "Accumulator exceed min value of -9999. -9999 is loaded into the accumulator",
+                )
+                self.accumulator = -9999
+
+        return int(self.accumulator)
 
     def subtract(self, memory_location):
         """Subtracts a number from a specific location in memory from the number in the accumulator."""
-
-        memory_value = self.memory[memory_location]
+        memory_value = int(self.memory[memory_location])
         self.accumulator -= memory_value
+        self.accumulator = int(self.accumulator)
         if self.accumulator > 9999 or self.accumulator < -9999:
-            raise ValueError("Your accumulator number exceeds the range available.")
-        return self.accumulator
+            if self.accumulator > 9999:
+                messagebox.showinfo(
+                    "!",
+                    "Accumulator exceed max value of 9999. 9999 is loaded into the accumulator",
+                )
+                self.accumulator = 9999
+            else:
+                messagebox.showinfo(
+                    "!",
+                    "Accumulator exceed min value of -9999. -9999 is loaded into the accumulator",
+                )
+                self.accumulator = -9999
+
+        return int(self.accumulator)
 
     def multiply(self, memory_location):
         """Multiplies a number from a specific memory location to the number in the accumulator
         and returns the accumulator"""
 
-        memory_value = self.memory[memory_location]
+        memory_value = int(self.memory[memory_location])
         self.accumulator *= memory_value
         self.accumulator = int(self.accumulator)
         if self.accumulator > 9999 or self.accumulator < -9999:
-            raise ValueError("Your accumulator number exceeds the range available.")
-        return
+            if self.accumulator > 9999:
+                messagebox.showinfo(
+                    "!",
+                    "Accumulator exceed max value of 9999. 9999 is loaded into the accumulator",
+                )
+                self.accumulator = 9999
+            else:
+                messagebox.showinfo(
+                    "!",
+                    "Accumulator exceed min value of -9999. -9999 is loaded into the accumulator",
+                )
+                self.accumulator = -9999
+
+        return int(self.accumulator)
 
     def divide(self, memory_location):
         """Divides the number in the accumulator by a number from a specific location in memory
         and returns the accumulator."""
 
-        memory_value = self.memory[memory_location]
+        memory_value = int(self.memory[memory_location])
         self.accumulator /= memory_value
         self.accumulator = int(self.accumulator)
         if self.accumulator > 9999 or self.accumulator < -9999:
-            raise ValueError("Your accumulator number exceeds the range available.")
-        return
+            if self.accumulator > 9999:
+                messagebox.showinfo(
+                    "!",
+                    "Accumulator exceed max value of 9999. 9999 is loaded into the accumulator",
+                )
+                self.accumulator = 9999
+            else:
+                messagebox.showinfo(
+                    "!",
+                    "Accumulator exceed min value of -9999. -9999 is loaded into the accumulator",
+                )
+                self.accumulator = -9999
+
+        return int(self.accumulator)
 
     def read(self, memory_location):
         """Asks the user for an integer and puts it into a specific location in memory"""
-        userInput = input("Enter an integer between -9999 and 9999: ")
-        try:
-            userInput = int(userInput)
-        except ValueError:
-            print("Must be an int")
-        except TypeError:
-            print("Must be an int")
-        else:
-            if userInput > 9999 or userInput < -9999:
-                print("must be an integer between -9999 and +9999")
 
+        valid = False
+        while not valid:
+            user_input = simpledialog.askstring(
+                "Input", "Enter an integer between -9999 and +9999"
+            )
+            try:
+                user_input = int(user_input)
+            except ValueError:
+                messagebox.showinfo(
+                    "!", "Input must be a integer between -9999 and +9999"
+                )
+            except TypeError:
+                messagebox.showinfo(
+                    "!", "Input must be a integer between -9999 and +9999"
+                )
             else:
-                # userInput = str(userInput)
-                # userInput = "+" + userInput.zfill(
-                # 4
-                # )   Formats input to be the same as memory format
-                self.memory[memory_location] = userInput
-                return
+                if user_input > 9999 or user_input < -9999:
+                    messagebox.showinfo(
+                        "!", "Input must be a integer between -9999 and +9999"
+                    )
+
+                else:
+                    user_input = str(user_input)
+                    user_input = "+" + user_input.zfill(
+                        4
+                    )  # Formats input to be the same as memory format
+                    self.memory[memory_location] = user_input
+                    valid = True
+        return
 
     def write(self, memory_location):
         """Prints the contents of the given memory location to the screen"""
 
-        # print(
-        #     f"Contents of memory location {memory_location} is {self.memory[memory_location]}."
-        # )
+  
         self.output.append(self.memory[memory_location])
 
         return
@@ -97,7 +158,7 @@ class Controller:
     def load(self, memory_location):
         """ Will take a memory location and load what ever is there into the accumulator  """
 
-        self.accumulator = self.memory[memory_location]
+        self.accumulator = int(self.memory[memory_location])
         return
 
     def store(self, memory_location):
@@ -125,11 +186,11 @@ class Controller:
     def run_instructions(self):
         """Runs the program written into the memory"""
 
-        # print("---- Running Program ----\n")
+        self.instruction_counter = 0
+        self.accumulator = 0
+
         index = 0
         while index < (len(self.memory) - 1):
-            if self.memory[index] == "-99999":
-                break
 
             op = int(self.memory[index][1:3])
             memory_location = int(self.memory[index][3:5])
@@ -197,18 +258,6 @@ class Controller:
             self.instruction_register = self.memory[index]
             self.operation_code = op
             self.operand = memory_location
-        # print("\n---- Program Finished ----")
+     
 
-    def getOutputs(self):
-        return_values = []
-        return_values.append(self.memory)
-        return_values.append(self.instruction_counter)
-        return_values.append(self.instruction_register)
-        return_values.append(self.operation_code)
-        return_values.append(self.operand)
-        return_values.append(self.accumulator)
-        return_values.append(self.output)
-        return return_values
 
-    def __str__(self):
-        pass
