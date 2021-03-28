@@ -11,6 +11,7 @@ Matthew Palmer
 
 
 def main():
+    """Initiates program and GUI to begin running"""
 
     memory = ["+0000"] * 100
     accumulator = 0

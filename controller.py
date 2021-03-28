@@ -5,6 +5,7 @@ from tkinter import messagebox
 
 
 class Controller:
+    """accepts user’s inputs and delegates data representation to a View and data handling to a Model."""
     def __init__(
         self,
         memory,
@@ -14,6 +15,7 @@ class Controller:
         operand,
         accumulator,
     ):
+        """Constructer call to initialize attributes of the Controller class"""
         self.memory = memory
         self.instruction_counter = instruction_counter
         self.instruction_register = instruction_register

@@ -1,9 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
 
+"""The Model manages the data and defines rules and behaviors, it represents 
+    the business logic of the application"""
 
 class Memory:
     def __init__(self, memory):
+        """Constructer call to initialize attributes of the memory class"""
         self.memory = memory
 
     def checkMemory(self, memory):
@@ -30,6 +33,7 @@ class Memory:
         return check
 
     def clean_memory(self, memory):
+        """Clears all memory locations that have be alocated a word"""
         index = 0
         while index < len(memory):
             number = memory[index]
