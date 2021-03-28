@@ -4,6 +4,7 @@ from controller import Controller
 
 
 class View:
+    """The View class presents all the data to the user"""
     def __init__(
         self,
         master,
@@ -29,6 +30,7 @@ class View:
         self.createWindow()
 
     def createWindow(self):
+        """Creates the GUI for UVSim"""
         # Begin creating widgets
         self.mainFrame.grid(sticky="news", pady=50, padx=50)
 
