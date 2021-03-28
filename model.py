@@ -1,9 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
 
+"""The Model manages the data and defines rules and behaviors, it represents 
+    the business logic of the application"""
 
 class Memory:
     def __init__(self, memory):
+        """Constructer call to initialize attributes of the memory class"""
         self.memory = memory
 
     def checkMemory(self, memory):
@@ -14,14 +17,14 @@ class Memory:
         while index < len(memory):
             number = memory[index]
             if len(number) != 5:  # Checks if length of instruction is correct
-                self.popupmsg(f"{number} is not a valid word")
+                messagebox.showinfo("!", f"{number} is not a valid word")
                 check = 0
                 return check
             elif number[0] not in (
                 "+",
                 "-",
             ):  # Checks if instruction contain a + or -
-                self.popupmsg(f"{number} is not a valid word")
+                messagebox.showinfo("!", f"{number} is not a valid word")
                 check = 0
                 return check
             else:
@@ -30,6 +33,7 @@ class Memory:
         return check
 
     def clean_memory(self, memory):
+        """Clears all memory locations that have be alocated a word"""
         index = 0
         while index < len(memory):
             number = memory[index]
@@ -37,30 +41,4 @@ class Memory:
             index += 1
         return memory
 
-        # index = 0
-        # while index < len(memory):
-        #     number = memory[index]
-        #     valid = False
 
-        #     while not (valid):
-        #         if len(number) != 5:  # Checks if length of instruction is correct
-        #             self.popupmsg(f"{number} is not a valid word")
-        #             # print(f"{number} is not a valid instruction")
-        #             # number = str(input("Enter a valid instruction:"))
-
-        #         elif number[0] not in (
-        #             "+",
-        #             "-",
-        #         ):  # Checks if instruction contain a + or -
-        #             self.popupmsg(f"{number} is not a valid word")
-        #             # print(f"{number} is not a valid instruction")
-        #             # number = str(input("Enter a valid instruction:"))
-
-        #         else:
-        #             valid = True
-        #             memory[index] = str(number)
-        #     index += 1
-        # return memory
-
-    def popupmsg(self, msg):
-        messagebox.showinfo("!", msg)

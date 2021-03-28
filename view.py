@@ -4,6 +4,7 @@ from controller import Controller
 
 
 class View:
+    """The View class presents all the data to the user"""
     def __init__(
         self,
         master,
@@ -29,6 +30,7 @@ class View:
         self.createWindow()
 
     def createWindow(self):
+        """Creates the GUI for UVSim"""
         # Begin creating widgets
         self.mainFrame.grid(sticky="news", pady=50, padx=50)
 
@@ -101,27 +103,32 @@ class View:
 
         ir_frame = tk.Frame(register_frame)
         tk.Label(ir_frame, text="Instruction Register").grid(row=0)
-        tk.Label(ir_frame, text=self.instruction_register).grid(row=1)
+        self.ir_label = tk.Label(ir_frame, text=self.instruction_register)
+        self.ir_label.grid(row=1)
         ir_frame.grid(row=0, pady=10)
 
         ic_frame = tk.Frame(register_frame)
         tk.Label(ic_frame, text="Instruction Counter").grid(row=0)
-        tk.Label(ic_frame, text=self.instruction_counter).grid(row=1)
+        self.ic_label = tk.Label(ic_frame, text=self.instruction_counter)
+        self.ic_label.grid(row=1)
         ic_frame.grid(row=1, pady=10)
 
         ac_frame = tk.Frame(register_frame)
         tk.Label(ac_frame, text="Accumulator").grid(row=0)
-        tk.Label(ac_frame, text=self.accumulator).grid(row=1)
+        self.ac_label = tk.Label(ac_frame, text=self.accumulator)
+        self.ac_label.grid(row=1)
         ac_frame.grid(row=2, pady=10)
 
         opcode_frame = tk.Frame(register_frame)
         tk.Label(opcode_frame, text="Op Code").grid(row=0)
-        tk.Label(opcode_frame, text=self.operation_code).grid(row=1)
+        self.opcode_label = tk.Label(opcode_frame, text=self.operation_code)
+        self.opcode_label.grid(row=1)
         opcode_frame.grid(row=3, pady=10)
 
         operand_frame = tk.Frame(register_frame)
         tk.Label(operand_frame, text="Operand").grid(row=0)
-        tk.Label(operand_frame, text=self.operand).grid(row=1)
+        self.operand_label = tk.Label(operand_frame, text=self.operand)
+        self.operand_label.grid(row=1)
         operand_frame.grid(row=4, pady=10)
 
         register_frame.grid(row=1, column=2, padx=10, pady=10)
@@ -177,57 +184,41 @@ class View:
 
         # Return an array of updated values from the Controller
         C.run_instructions()
-        return_values = C.getOutputs()
 
         # Update registers with new values
-        self.memory = return_values[0]
-        self.instruction_counter = return_values[1]
-        self.instruction_register = return_values[2]
-        self.operation_code = return_values[3]
-        self.operand = return_values[4]
-        self.accumulator = return_values[5]
+        self.memory = C.memory
+        self.instruction_counter = C.instruction_counter
+        self.instruction_register = C.instruction_register
+        self.operation_code = C.operation_code
+        self.operand = C.operand
+        self.accumulator = C.accumulator
 
         # Prints the output array to the output field
-        self.Output(return_values[6])
+        self.updateWindow(C.output)
 
-    def Output(self, lyst):
+    def updateWindow(self, lyst):
+        """Takes the array of outputs from the controller class and
+        loads it into the Output array"""
+
+        # Updates registers and output field
         self.prog_output.config(text=lyst)
+        self.ir_label.config(text=self.instruction_register)
+        self.ic_label.config(text=self.instruction_counter)
+        self.ac_label.config(text=self.accumulator)
+        self.opcode_label.config(text=self.operation_code)
+        self.operand_label.config(text=self.operand)
 
-    # def printing(self):
-    #     print("\nREGISTERS:")
-    #     print("Accumulator:            " + str(self.accumulator))
-    #     print("Instruction Counter:    " + str(self.instruction_counter))
-    #     print("InstructionRegister:    " + self.instruction_register)
-    #     print("Operation Code:         " + str(self.operation_code).zfill(2))
-    #     print("Operand:                " + str(self.operand).zfill(2))
-
-    #     print("Memory:")
-    #     print(
-    #         "       00     01     02     03     04     05     06     07     08     09"
-    #     )
-    #     tens = 0
-    #     i = 0
-    #     index = 0
-
-    #     while i < len(self.memory):
-    #         if isinstance(self.memory[i], int):
-    #             if self.memory[i] >= 0:
-    #                 self.memory[i] = str(self.memory[i])
-    #                 self.memory[i] = "+" + self.memory[i].zfill(4)
-    #                 i += 1
-    #             else:
-    #                 self.memory[i] = str(self.memory[i])
-    #                 self.memory[i] = self.memory[i].zfill(5)
-    #                 i += 1
-    #         else:
-    #             i += 1
-
-    #     while index < len(self.memory):
-    #         print(
-    #             f"{str(tens).zfill(2)}  {self.memory[index]}  {self.memory[index+1]}  "
-    #             f"{self.memory[index+2]}  {self.memory[index+3]}  {self.memory[index+4]}  "
-    #             f"{self.memory[index+5]}  {self.memory[index+6]}  {self.memory[index+7]}  "
-    #             f"{self.memory[index+8]}  {self.memory[index+9]}"
-    #         )
-    #         index += 10
-    #         tens += 10
+        # Updates memory frame with new values after run program is pressed
+        self.memory_frame.destroy()
+        self.memory_frame = tk.Frame(self.mainFrame)
+        memory_location = 0
+        self.retreive_mem_contents = []
+        for i in range(10):
+            for j in range(10):
+                mem_content = tk.Label(
+                    self.memory_frame, text=self.memory[memory_location]
+                )
+                mem_content.grid(row=i + 1, column=j, padx=5, pady=5)
+                self.retreive_mem_contents.append(mem_content)
+                memory_location += 1
+        self.memory_frame.grid(column=1, row=1)
